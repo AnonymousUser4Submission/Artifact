@@ -298,7 +298,60 @@ For both tasks, please replace the fps to yours in the code.
     -   --index 10 ~ --index 11 are responsible for analyzing results of each person
     -   default --index is -1, which is responsible for merge the results
 
+
+### Measure Responsiveness, Smoothness and Inference Accuracy in the same environment. As well as QoE suggestions Demo.
+
+- In this section, we build a online video streaming meeting application to measure the QoE metrics together.
+
+  - Responsiveness: we apply the Speedometer 2.1 benchmark test to the Web application so that we can measure the responsiveness QoE
+
+  - Smoothness: we measure the video fps of the Web page
+
+  - Inference accuracy: we run object detection model in the Web page to detect human face. Face/human detection is a typical application that is widely used in the field of online video meeting, and there are many other similay applications such as background blurring and face cartoonlization. We record the video and use the prediction results of YOLOv7 as the ground truth.
+
+- How to run the application
+
+  - open the Web application: after you start the httpserver, open the `qoe.html` and click start button is OK.
+
+  - After start the test, there will be a GUI indicating that Speedometer is running and it will vanish after finishing the test.
+
+  - During the test, you can open the Developer Tools of the Chrome and there will be consold logs that shows the fps with tag `Current Video FPS`
+
+  - Once the test is finished, you can get the responsiveness score and std in the DevTools console through `benchmarkClient.scoreResults` and it will return the responsiveness score. You can save the console log through right click.
+
+- How to get the inference accuracy QoE
+
+  - First, record the video to local, save as `video.mp4`
+
+  - Second, convert the video to frames and get the ground truth through YOLOv7. Save the frames to `frames` folder and save ground truth to `labels` folder
+
+    - convert video to frames through `python video2frames.py`. this command convert `video.mp4` to frames in the `frames` folder
+
+    - go to [YOLOv7 official Github Repo](https://github.com/WongKinYiu/yolov7), clone the code and create the environment.
+
+    - download the weight you want to use. The pretrained model we use is `yolov7-e6e.pt`
+
+    - get the ground truth through `python detect.py --weights yolov7-e6e.pt --conf 0.25 --img-size 640 --source frames/ --save-txt`, where the `frames` is the folder that contains the converted frames and `yolov7-e6e.pt` is the `.pt` checkpoint path. Other options keep the same as the official example
+
+    - the ground truth will be saved in `runs/detect/exp/labels`
+
+  - then you can get the inference accuracy through
+
+    ```python 
+
+      python qoe_ssd.py [--model <ssd model path>] [--gtdir <ground truth dir>]
     
+    ```
+
+    by default, the code will use the SSD-MobileNetV2 downloaded from TF Hub model zoo that is pre-trained. the default truth dir is `runs/detect/exp/labels`. the results will be saved in `analyzed.txt`
+
+- How to verify the practicablity of our QoE suggestions
+
+  - You can select different frameworks, backends  and models for inference
+
+  - You can set the num-thread of the Waasm backend. (When using WebGL backend, this proporty is not used)
+
+  - To allocate different CPU time to the benchmark test through inserting time interval, you may need to input the `interval`, which denotes inference for 1 second and pause for XXX seconds. In this way we can allocate more CPU resources to the benchmark test.
 
 ## Run inference in native
 

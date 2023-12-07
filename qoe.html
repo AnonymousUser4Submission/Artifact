@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<html>
+<head>
+    <script src="./dist/tf-core.js"></script>
+    <script src="./dist/tf-backend-cpu.js"></script>
+    <!-- <script src="./dist/tf-backend-webgpu.min.js"></script> -->
+    <script src="./dist/tf-backend-webgl.js"></script>
+    <script src="./dist/tf-backend-wasm.min.js"></script>
+    <script src="./dist/tf-converter.js"></script>
+    <script src="./dist/ort.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/systeminformation@5.12.11/lib/index.js"></script> -->
+    <!-- <script src="http://162.105.175.211:8080/dist/bin/tfjs-core/tf-core.min.js"></script> -->
+    <!-- <script src="http://162.105.175.211:8080/dist/bin/tfjs-backend-cpu/tf-backend-cpu.min.js"></script> -->
+    <!-- <script src="http://162.105.175.211:8080/tfjs-backend-wasm/dist/tf-backend-wasm.min.js"></script> -->
+    <!-- <script src="http://162.105.175.211:8080/dist/bin/tfjs-converter/tf-converter.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@3.18.0/dist/tf-backend-wasm.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgpu@0.0.1-alpha.8/dist/tf-backend-webgpu.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@3.18.0"></script> -->
+    
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script> -->
+    <!-- <script src="./onnxrt.js"></script> -->
+
+    <script src="resources/main.mjs" type="module"></script>
+    
+
+    <title>Webcam Stream with Text Inputs</title>
+    <style>
+        /* body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        } */
+
+        body {
+            margin-right: 20px;
+            padding: 0;
+            text-align: right; 
+        } 
+        
+
+        #textInputs {
+            margin-top: 20px;
+        }
+
+        /* #webcam {
+            float: right; 
+            margin-top: 20px;
+            margin-right: 20px; 
+        } */
+
+        select {
+            margin: 5px;
+            padding: 10px;
+            width: 220px; /* Slightly wider to accommodate longer option texts */
+            -webkit-appearance: none; /* Removes default styling on some browsers */
+            -moz-appearance: none;
+            appearance: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Optional: Style to make the dropdown arrow look consistent across browsers */
+        select::-ms-expand {
+            display: none;
+        }
+
+        /* Optional: Add a custom arrow indicator for the dropdown */
+        select {
+            /* background-image: url('data:image/svg+xml;charset=US-ASCII,<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L1.5 3h9L6 9z" fill="%23000"/></svg>'); */
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 12px;
+        }
+
+        #startButton {
+            margin-top: auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Additional styling for the button, if needed */
+        #startButton {
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 style="text-align: right; margin-right: 20px;">Webcam Stream with In-browser Inference</h1>
+    
+    <video id="webcam" width="960" height="640" autoplay></video>
+
+    <div id="textInputs">
+        <label for="selection0">Framework</label>
+        <select id="selection0" name="FRAMEWORK">
+            <option value="tfjs">TF.js</option>
+            <option value="ortjs">ORT.js</option>
+        </select>
+
+        <label for="selection1">Model Name</label>
+        <select id="selection1" name="MODELNAME">
+            <option value="MobilenetV2">MobilenetV2</option>
+            <option value="SSD-MobileNetV2">SSD-MobileNetV2</option>
+            <option value="Mobile-BERT">Mobile-BERT</option>
+        </select> 
+
+    
+        <label for="selection2">Backend</label>
+        <select id="selection2" name="BACKEND">
+            <option value="Wasm">Wasm</option>
+            <option value="WebGL">WebGL</option>
+        </select>   </br>
+
+    
+        <label for="selection3">Number of Threads</label>
+        <select id="selection3" name="NUMTHREAD">
+            <option value="1">1 (default)</option>
+            <option value="4">4</option>
+        </select>
+
+        <label for="selection4">SIMD</label>
+        <select id="selection4" name="SIMD">
+            <option value="1">Enable</option>
+            <option value="0">Disable</option>
+        </select>
+
+        <label for="">Interval</label>
+        <input type="text" id="input0" name="INTERVAL" value="1.0">
+
+
+        <button id="startButton", onclick="entry_func()", class="start-tests-button">Start</button>
+    </div>
+    
+    <script src="./qoe.js"></script>
+    
+
+</body>
+</html>

@@ -26,7 +26,7 @@ class ServerHandler(BaseHTTPRequestHandler):
         try:
             if self.path.endswith(".html"):
                 mimetype='text/html'
-            elif self.path.endswith(".js"):
+            elif self.path.endswith(".js") or self.path.endswith(".mjs"):
                 mimetype='application/javascript'
             elif self.path.endswith('json') or self.path.endswith('.js.map'):
                 mimetype='application/json'
